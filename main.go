@@ -65,12 +65,17 @@ func main() {
 	// PUT /cars/:id - update car
 	r.PUT("/cars/:car_id", func(ctx *gin.Context) {
 		var c car
+
 		id := ctx.Param("car_id")
 		for i, car := range cars {
 			if car.ID == id {
+				if err := ctx.ShouldBindJSON(&c); err != nil {
+					ctx.JSON(http.StatusBadRequest, gin.H{
+						"error": err.Error(),
+					})
+					return
+				}
 				cars[i] = c
-				// cars = append(cars[:i], cars[i+1:]...)
-				break
 			}
 		}
 	})

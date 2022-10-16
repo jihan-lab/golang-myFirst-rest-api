@@ -51,8 +51,6 @@ func main() {
 		ctx.JSON(http.StatusCreated, car)
 	})
 
-	// PUT /cars/:id - update car
-
 	// DELETE /cars/:id - delete car
 	r.DELETE("/cars/:car_id", func(ctx *gin.Context) {
 		id := ctx.Param("car_id")
@@ -60,6 +58,29 @@ func main() {
 			if car.ID == id {
 				cars = append(cars[:i], cars[i+1:]...)
 				break
+			}
+		}
+	})
+
+	// PUT /cars/:id - update car
+	r.PUT("/cars/:car_id", func(ctx *gin.Context) {
+		var c car
+		id := ctx.Param("car_id")
+		for i, car := range cars {
+			if car.ID == id {
+				cars[i] = c
+				// cars = append(cars[:i], cars[i+1:]...)
+				break
+			}
+		}
+	})
+
+	// GET /cars/:id - get one car
+	r.GET("/cars/:car_id", func(ctx *gin.Context) {
+		id := ctx.Param("car_id")
+		for i, car := range cars {
+			if car.ID == id {
+				ctx.JSON(http.StatusOK, cars[i])
 			}
 		}
 	})
